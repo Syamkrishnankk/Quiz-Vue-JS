@@ -29,11 +29,11 @@
           width="300"
         >
         <div class="px-7 py-5">
-          <h3>Hii {{ username }},</h3>
-          <p>Your Score : {{ correctCount }}/{{ totalQuestions }}</p>
-          <p>Correct Answered : {{ correctCount }}</p>
-          <p>Wrong Answered : {{ wrongCount }}</p>
-          <p>Not Attempted : {{ notCount }}</p>
+          <h3 class="mt-3">Hii {{ username }},</h3>
+          <h4 class="mt-2 mb-1">Your Score : {{ correctCount }}/{{ totalQuestions }}</h4>
+          <p class="mt-1">Correct Answered : {{ correctCount }}</p>
+          <p class="mt-1">Wrong Answered : {{ wrongCount }}</p>
+          <p class="mt-1">Not Attempted : {{ notCount }}</p>
 
         </div>
         
