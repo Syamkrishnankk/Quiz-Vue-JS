@@ -2,10 +2,35 @@
     <div class="text-center mt-8">
         <h1 class="text-h4 font-weight-medium">Questions</h1>
     </div>
+    
+    <v-row  align="center" class="my-10">
+      <v-col justify="left" align="left"  cols="9" class="px-2 py-3">
+        <!-- <v-pagination :length="totalQuestions" v-model="page" justify="left" active-color="success" total-visible="3" :class="paginationClasses" >
+        </v-pagination> -->
+        <div
+        class="btn-scroll ml-10"
+        >
+        <span v-for="num in totalQuestions" :key="num">
+          <v-btn :class="{'mx-1 my-2': true,'blue': selectedAnswers[num]}" min-width="10" @click="qstChange(num)" >
+            {{ num }}
+          </v-btn>
+        </span>
+        
+      </div>
+        
+      </v-col>
+      <v-col justify="right" align="right" cols="3" >
+        <v-btn color="success" @click="handleSubmit();dialog = true" class="mr-10 btn" >
+            End Quiz
+        </v-btn>
+      </v-col>
+    </v-row>
+
     <span v-for="questions in questionoptions.questions">
-        <QuizCard >
+
+        <QuizCard v-if="page === questions.id">
             <template #question>
-                {{ questions.question }}
+              {{ questions.id }}. {{ questions.question }}
             </template>
             <template #qst >
                 <v-radio-group v-model="selectedAnswers[questions.id]">
@@ -14,12 +39,19 @@
             </template>  
         </QuizCard>
     </span>
-    <v-row justify="center" align="center" class="my-10">
-        <v-btn color="success" @click="handleSubmit();dialog = true">
-            Submit
+    <v-row class="mx-5 my-5">
+      <v-col class="btn-margin">
+        <v-btn @click="PrevQst">
+        Prev
         </v-btn>
-    </v-row>
+      </v-col>
+      <v-col justify="right" align="right">
+        <v-btn @click="nextQst">
+        Next
+        </v-btn>
+      </v-col>
     
+    </v-row>
     <v-dialog
         v-model="dialog"
         width="auto"
@@ -49,13 +81,33 @@
 
 </template>
 
+<style scoped>
+  .btn-scroll{
+    scroll-behavior: smooth;
+    scrollbar-width:none;
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+  }
+  .blue{
+    background-color: rgba(255, 255, 255, 0.862);
+    color: black;
+  }
+  @media screen and (max-width: 720px){
+    .btn{
+    font-size: 12px;
+  }
+  }
+
+ 
+</style>
+
 <script setup>
 
 import QuizCard from './QuizCard.vue'
-  import { ref } from 'vue'
-
-  import { useRoute } from 'vue-router';
-
+import { ref } from 'vue'
+import { useRoute } from 'vue-router';
+let page = ref(1)
 const route = useRoute();
 const username = route.query.username;
 console.log(username)
@@ -101,13 +153,10 @@ const selectedAnswers = ref({});
 const dialog = ref(false)
 let correctCount = 0;
 let wrongCount = 0;
-
 let selectedLength = 0;
 let notCount;
-let totalQuestions;
+let totalQuestions = questionoptions.value.questions.length;
 function handleSubmit() {
-  
-
   for (const questionId in selectedAnswers.value) {
     const selectedOption = selectedAnswers.value[questionId];
     selectedLength++;
@@ -125,7 +174,7 @@ function handleSubmit() {
     
   }
   
-  totalQuestions = questionoptions.value.questions.length;
+  
   notCount = totalQuestions-selectedLength;
   
 
@@ -136,9 +185,28 @@ function handleSubmit() {
 const reloadPage = () =>{
   window.location.reload();
 }
+function nextQst(){
+  if(page.value < totalQuestions){
+      page.value +=1
+      console.log(page.value)
+  }
+  else{
+    page.value = page.value
+    console.log(page.value)
+  }
+  
+}
+function PrevQst(){
+  if(page.value > 1){
+      page.value -=1
+  }
+  else{
+    page.value = page.value
+  }
+  
+}
+const qstChange = (num) =>{
+  page.value = num
+}
+
 </script>
-
-
-
-
-
